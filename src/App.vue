@@ -1,6 +1,9 @@
 <template>
   <div id="app">
     <RedDotTest ref="redDotTest" v-on:test-result="onTestResult" v-on:start-test="startTest" :example-stage="true" />
+    <form name="testResult" method="POST" data-netlify="true">
+      <input id="redDotTestResult" name="redDotTestResult" type="hidden" value="2000">
+    </form>
   </div>
 </template>
 
@@ -21,11 +24,19 @@ export default {
   },
   methods:{
     onTestResult(result){
+      if(result === "wrong"){
+        document.getElementById("redDotTestResult").value = this.testedTimes[Math.floor(this.currentTestIndex/this.nTestsPerTime)]
+        document.forms["testResult"].submit()
+      }
       if(result === "correct"){
         const nTotalTests = this.nTestsPerTime * this.testedTimes.length
         this.currentTestIndex ++;
         if(this.currentTestIndex < nTotalTests){
           this.startTest(this.currentTestIndex)
+        }
+        else{
+          document.getElementById("redDotTestResult").value = this.testedTimes[this.testedTimes.length-1]
+          document.forms["testResult"].submit()
         }
       }
     },

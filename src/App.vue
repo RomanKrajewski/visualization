@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Gandalf rules"/>
+    <RedDotTest :show-for-ms="2000"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RedDotTest from './components/RedDotTest.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    RedDotTest
   }
 }
 </script>

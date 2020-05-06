@@ -1,19 +1,26 @@
 <template>
-    <div class="hello">
-        <h1>{{ msg }}</h1>
-        <canvas ref="imagecanvas" v-bind:width="canvasWidth" v-bind:height="canvasHeight"
+    <div class="redDotTest">
+        <h1>Gibt es auf dem Bild einen roten Punkt?</h1>
+        <h2 v-show="exampleStage">Beispiel</h2>
+        <canvas v-show="showCanvas" ref="imagecanvas" v-bind:width="canvasWidth" v-bind:height="canvasHeight"
                 id="canvas"></canvas>
+        <button v-show="exampleStage" v-on:click="startTest" >Test starten</button>
+    <button v-show="!exampleStage && !showCanvas" v-on:click="yesClicked" >Ja</button>
+    <button v-show="!exampleStage && !showCanvas" v-on:click="noClicked">Nein</button>
     </div>
 </template>
 
 <script>
     export default {
-        name: 'HelloWorld',
+        name: 'RedDotTest',
         props: {
-            msg: String
+            showForMs: Number
         },
         data: function () {
             return {
+                showRed: true,
+                exampleStage:true,
+                showCanvas: false,
                 canvasHeight: 512,
                 canvasWidth: 512,
             };
@@ -65,17 +72,37 @@
                 const h = w / 2;
                 this.canvasWidth = w;
                 this.canvasHeight = h;
-                this.$nextTick(() => {
-                    this.showCircles(true,4);
-                })
+            },
+            startTest: function(){
+                this.showRed = Math.random() < 0.5;
+                this.exampleStage = false;
+                this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+                this.showCircles(this.showRed, 3)
+                setTimeout(() => { this.showCanvas = false}, this.showForMs);
+            },
+            yesClicked: function(){
+                if(this.showRed){
+                    console.log("win")
+                }
+                else{
+                    console.log("loose")
+                }
+            },
+            noClicked: function(){
+                if(this.showRed){
+                    console.log("loose")
+                }
+                else{
+                    console.log("win");
+                }
             }
         },
         mounted: function () {
             this.handleResize()
-            window.addEventListener('resize', this.handleResize)
-        },
-        beforeDestroy: function () {
-            window.removeEventListener('resize', this.handleResize)
+            this.$nextTick(() => {
+                this.showCircles(this.showRed,4);
+            })
+            this.showCanvas = true;
         }
     }
 

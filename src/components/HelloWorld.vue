@@ -1,9 +1,8 @@
 <template>
     <div class="hello">
         <h1>{{ msg }}</h1>
-        <canvas ref="imagecanvas" v-bind:width="width" v-bind:height="height"
+        <canvas ref="imagecanvas" v-bind:width="canvasWidth" v-bind:height="canvasHeight"
                 id="canvas"></canvas>
-        <button v-on:click="showCircles">show circles</button>
     </div>
 </template>
 
@@ -15,8 +14,8 @@
         },
         data: function () {
             return {
-                height: 512,
-                width: 512,
+                canvasHeight: 512,
+                canvasWidth: 512,
             };
         },
         computed: {
@@ -28,18 +27,46 @@
             }
         },
         methods: {
-            showCircles: function () {
-                this.ctx.beginPath();
-                this.ctx.arc(75, 75, 50, 0, Math.PI * 2, true);
-                this.ctx.fill();
+            scaleToCanvas: function(x){
+                return x/100*this.canvasWidth
+            },
+            showCircles: function (showRed, radius) {
+                function getRandomInt(max) {
+                    return Math.floor(Math.random() * Math.floor(max));
+                }
+                let distanceBetweenCircles = radius*4
+                let randomFactor = distanceBetweenCircles/2
+                let nCirclesX = Math.floor(100/distanceBetweenCircles)
+                let nCirclesY = Math.floor(50/distanceBetweenCircles)
+                let redX = -1
+                let redY = -1
+                if(showRed){
+                    redX = getRandomInt(nCirclesX)
+                    redY = getRandomInt(nCirclesY)
+                }
+                for(let i = 0; i < nCirclesX; i++){
+                    for(let j = 0; j < nCirclesY; j++){
+                        if(i===redX && j===redY){
+                          this.ctx.fillStyle = "red"
+                        }
+                        else{
+                            this.ctx.fillStyle = "black"
+                        }
+                        this.ctx.beginPath();
+                        this.ctx.arc(this.scaleToCanvas(distanceBetweenCircles * (i+1) - Math.random() * randomFactor - radius),
+                            this.scaleToCanvas(distanceBetweenCircles * (j+1) - Math.random() * randomFactor - radius),
+                            this.scaleToCanvas(radius), 0, Math.PI * 2, true);
+                        this.ctx.fill();
+                    }
+                }
             },
             handleResize: function () {
                 const w = Math.min(window.innerWidth - 10, 900);
                 const h = w / 2;
-                this.width = w;
-                this.height = h;
+                this.canvasWidth = w;
+                this.canvasHeight = h;
                 this.$nextTick(() => {
-                    this.showCircles();
+                    this.showCircles(true,4);
                 })
             }
         },

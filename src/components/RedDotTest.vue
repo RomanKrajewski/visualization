@@ -4,9 +4,9 @@
         <h2 v-show="exampleStage">Beispiel</h2>
         <canvas v-show="showCanvas" ref="imagecanvas" v-bind:width="canvasWidth" v-bind:height="canvasHeight"
                 id="canvas"></canvas>
-        <button v-show="exampleStage" v-on:click="startTest" >Test starten</button>
-    <button v-show="!exampleStage && !showCanvas" v-on:click="yesClicked" >Ja</button>
-    <button v-show="!exampleStage && !showCanvas" v-on:click="noClicked">Nein</button>
+        <button v-show="exampleStage" v-on:click="$emit('start-test', 0)" >Test starten</button>
+        <button v-show="!exampleStage && !showCanvas" v-on:click="yesClicked" >Ja</button>
+        <button v-show="!exampleStage && !showCanvas" v-on:click="noClicked">Nein</button>
     </div>
 </template>
 
@@ -14,12 +14,11 @@
     export default {
         name: 'RedDotTest',
         props: {
-            showForMs: Number
+            exampleStage: Boolean
         },
         data: function () {
             return {
                 showRed: true,
-                exampleStage:true,
                 showCanvas: false,
                 canvasHeight: 512,
                 canvasWidth: 512,
@@ -73,12 +72,12 @@
                 this.canvasWidth = w;
                 this.canvasHeight = h;
             },
-            startTest: function(){
+            startTest: function(showForMs){
                 this.showRed = Math.random() < 0.5;
-                this.exampleStage = false;
                 this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
                 this.showCircles(this.showRed, 3)
-                setTimeout(() => { this.showCanvas = false}, this.showForMs);
+                this.showCanvas = true;
+                setTimeout(() => { this.showCanvas = false}, showForMs);
             },
             yesClicked: function(){
                 if(this.showRed){
@@ -112,6 +111,17 @@
 <style scoped>
     h3 {
         margin: 40px 0 0;
+    }
+    button {
+        background-color: #555555; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 5px;
     }
 
 </style>

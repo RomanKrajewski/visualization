@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <RedDotTest :show-for-ms="2000"/>
+    <RedDotTest v-on:test-result="onTestResult" :show-for-ms="2000"/>
   </div>
 </template>
 
@@ -11,6 +11,11 @@ export default {
   name: 'App',
   components: {
     RedDotTest
+  },
+  methods:{
+    onTestResult(value){
+      console.log("parent:" + value)
+    }
   }
 }
 </script>

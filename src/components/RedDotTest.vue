@@ -82,18 +82,18 @@
             },
             yesClicked: function(){
                 if(this.showRed){
-                    console.log("win")
+                    this.$emit("test-result", "correct")
                 }
                 else{
-                    console.log("loose")
+                    this.$emit("test-result","wrong")
                 }
             },
             noClicked: function(){
                 if(this.showRed){
-                    console.log("loose")
+                    this.$emit("test-result","wrong")
                 }
                 else{
-                    console.log("win");
+                    this.$emit("test-result","correct");
                 }
             }
         },
